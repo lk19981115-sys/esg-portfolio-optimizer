@@ -91,9 +91,9 @@ export function getBaseData(): ScoredData[] {
     });
 
     yearData.forEach((row, i) => {
-      // 优先使用 Excel 里面现成的打分（保证和报告绝对一致），如果没有才使用代码计算出来的打分
-      const peFinalScore = row.pe_score !== undefined ? row.pe_score : peScores.get(i)!;
-      const esgFinalScore = row.esg_score !== undefined ? row.esg_score : esgScores.get(i)!;
+      // 彻底放弃 Excel 里的打分，全权交由代码严谨计算 (动态打分)，恢复 16.17% (算术) / 16.51% (几何)
+      const peFinalScore = peScores.get(i)!;
+      const esgFinalScore = esgScores.get(i)!;
 
       scoredData.push({
         ...row,

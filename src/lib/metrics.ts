@@ -13,20 +13,26 @@ export interface YearlyData {
  * 1. 年化收益率 (Arithmetic Mean)
  * 迎合 Excel 的计算方式，使用简单的算术平均数，保证大屏数据和 Excel 报告一致。
  */
-export function calculateGeometricMeanReturn(data: YearlyData[]): number {
+export function calculateGeometricMeanReturn(data: YearlyData[], useExcelMath: boolean = false): number {
   if (data.length === 0) return 0;
   const n = data.length;
   
-  // 算术平均数 Σ(r_i) / n
-  const sumReturns = data.reduce((acc, curr) => acc + curr.return, 0);
-  return sumReturns / n;
+  if (useExcelMath) {
+    // 算术平均数 Σ(r_i) / n (Excel 逻辑)
+    const sumReturns = data.reduce((acc, curr) => acc + curr.return, 0);
+    return sumReturns / n;
+  } else {
+    // 几何平均数 (严格学术逻辑)
+    const productReturns = data.reduce((acc, curr) => acc * (1 + curr.return), 1);
+    return Math.pow(productReturns, 1 / n) - 1;
+  }
 }
 
 /**
- * 2. 年化波动率 (Population Standard Deviation)
- * 迎合 Excel 的计算方式，使用总体标准差 (分母为 n)，而不是样本标准差 (n-1)。
+ * 2. 年化波动率
+ * 迎合 Excel 使用总体标准差，严格模式使用样本标准差。
  */
-export function calculateSampleVolatility(data: YearlyData[]): number {
+export function calculateSampleVolatility(data: YearlyData[], useExcelMath: boolean = false): number {
   if (data.length === 0) return 0;
   const n = data.length;
 
@@ -37,33 +43,37 @@ export function calculateSampleVolatility(data: YearlyData[]): number {
     return acc + Math.pow(curr.return - arithmeticMean, 2);
   }, 0);
 
-  // 总体方差 / n (对应 Excel 的 STDEV.P)
-  const populationVariance = sumSquaredDeviations / n;
-  
-  return Math.sqrt(populationVariance);
+  if (useExcelMath) {
+    // 总体方差 / n (对应 Excel 的 STDEV.P)
+    const populationVariance = sumSquaredDeviations / n;
+    return Math.sqrt(populationVariance);
+  } else {
+    // 样本方差 / (n-1) (严格学术逻辑)
+    if (n <= 1) return 0;
+    const sampleVariance = sumSquaredDeviations / (n - 1);
+    return Math.sqrt(sampleVariance);
+  }
 }
 
 /**
  * 3. 夏普比率 (Sharpe Ratio)
- * 保持算术平均收益率，但波动率使用上面的总体标准差，如果 Excel 里 Rf 为 0，这里也可能需要调整。
- * 我们先保留真实的 Rf，但分母改用 Excel 风格的波动率。
  */
-export function calculateSharpeRatio(data: YearlyData[], defaultRf: number = 0.02): number {
+export function calculateSharpeRatio(data: YearlyData[], defaultRf: number = 0.02, useExcelMath: boolean = false): number {
   if (data.length === 0) return 0;
   const n = data.length;
 
-  const sumReturns = data.reduce((acc, curr) => acc + curr.return, 0);
-  const arithmeticMean = sumReturns / n;
+  // 收益率根据模式选择
+  const meanReturn = calculateGeometricMeanReturn(data, useExcelMath);
 
   const sumRf = data.reduce((acc, curr) => acc + (curr.rf_annual !== undefined ? curr.rf_annual : defaultRf), 0);
   const meanRf = sumRf / n;
 
-  // 使用降级后的总体波动率
-  const volatility = calculateSampleVolatility(data);
+  // 波动率根据模式选择
+  const volatility = calculateSampleVolatility(data, useExcelMath);
 
   if (volatility === 0) return 0;
 
-  return (arithmeticMean - meanRf) / volatility;
+  return (meanReturn - meanRf) / volatility;
 }
 
 /**
