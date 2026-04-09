@@ -279,25 +279,13 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
     rf_annual: p.rf_annual // 真正读取了你们 Excel 中每年真实的无风险利率
   }));
 
-  // 所有计算全部回归最严谨的学术模式（几何平均 + 样本标准差）
-  const useExcelMath = false;
-
-  // 使用金融公式计算 KPI
-  let geoMeanRet = calculateGeometricMeanReturn(yearlyData, useExcelMath);
-  let sampleVolatility = calculateSampleVolatility(yearlyData, useExcelMath);
-  let sharpe = calculateSharpeRatio(yearlyData, 0.02, useExcelMath);
-  let maxDrawdown = calculateMaxDrawdown(yearlyData);
-  let avgAlpha = dynamicPerf.length > 0 ? dynamicPerf.reduce((a, b) => a + b.Portfolio_Abnormal_Return, 0) / dynamicPerf.length : 0;
-
-  // 核心诉求：什么都不改，只有当滑块在 50/50 时，把展示的 KPI 强行“化妆”成你们报告里的数据
-  // 底层选股、曲线、散点图全部维持原样，只改这四个数字展示。
-  if (esgWeight === 50) {
-    geoMeanRet = 0.1668; // 强行对齐 16.68%
-    sampleVolatility = 0.1041; // 强行对齐 10.41%
-    sharpe = 1.6015; // 强行对齐 1.6015
-    avgAlpha = 0.0568; // 强行对齐 5.68%
-    // 表格中没有 maxDrawdown，保持原样自然结算
-  }
+  // 使用严格金融公式计算 KPI
+  const geoMeanRet = calculateGeometricMeanReturn(yearlyData);
+  const sampleVolatility = calculateSampleVolatility(yearlyData);
+  const sharpe = calculateSharpeRatio(yearlyData); // 内部会自动使用传进来的 rf_annual
+  const maxDrawdown = calculateMaxDrawdown(yearlyData);
+  
+  const avgAlpha = dynamicPerf.length > 0 ? dynamicPerf.reduce((a, b) => a + b.Portfolio_Abnormal_Return, 0) / dynamicPerf.length : 0;
 
   // 为散点图准备数据
   const scatterData = useMemo(() => {
@@ -308,34 +296,34 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
     return [
       { 
         name: t.dynamic_label, 
-        x: calculateSampleVolatility(yearlyData, useExcelMath) * 100, 
-        y: calculateGeometricMeanReturn(yearlyData, useExcelMath) * 100, 
+        x: calculateSampleVolatility(yearlyData) * 100, 
+        y: calculateGeometricMeanReturn(yearlyData) * 100, 
         z: 400,
         fill: '#60A5FA' // 亮蓝色，提高暗黑模式对比度
       },
       { 
         name: t.pure_esg_label, 
-        x: calculateSampleVolatility(esgYearly, false) * 100, 
-        y: calculateGeometricMeanReturn(esgYearly, false) * 100, 
+        x: calculateSampleVolatility(esgYearly) * 100, 
+        y: calculateGeometricMeanReturn(esgYearly) * 100, 
         z: 200,
         fill: '#34D399' // 亮绿色
       },
       { 
         name: t.pure_value_label, 
-        x: calculateSampleVolatility(valueYearly, false) * 100, 
-        y: calculateGeometricMeanReturn(valueYearly, false) * 100, 
+        x: calculateSampleVolatility(valueYearly) * 100, 
+        y: calculateGeometricMeanReturn(valueYearly) * 100, 
         z: 200,
         fill: '#F87171' // 亮红色
       },
       { 
         name: t.benchmark_label, 
-        x: calculateSampleVolatility(bmkYearly, false) * 100, 
-        y: calculateGeometricMeanReturn(bmkYearly, false) * 100, 
+        x: calculateSampleVolatility(bmkYearly) * 100, 
+        y: calculateGeometricMeanReturn(bmkYearly) * 100, 
         z: 200,
         fill: '#94A3B8' // 灰色
       },
     ];
-  }, [yearlyData, esgPerf, valuePerf, dynamicPerf, t, useExcelMath]);
+  }, [yearlyData, esgPerf, valuePerf, dynamicPerf, t]);
 
   const displayHoldings = dynamicHoldings.filter(h => h.Year === selectedYear);
 

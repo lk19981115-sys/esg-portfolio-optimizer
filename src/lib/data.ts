@@ -12,8 +12,6 @@ export interface RawData {
   annual_ret: number;
   abnormal_ret: number;
   rf_annual?: number; // 动态无风险利率
-  pe_score?: number; // 从 Excel 中直接读取的打分
-  esg_score?: number; // 从 Excel 中直接读取的打分
 }
 
 export interface ScoredData extends RawData {
@@ -91,14 +89,10 @@ export function getBaseData(): ScoredData[] {
     });
 
     yearData.forEach((row, i) => {
-      // 彻底放弃 Excel 里的打分，全权交由代码严谨计算 (动态打分)，恢复 16.17% (算术) / 16.51% (几何)
-      const peFinalScore = peScores.get(i)!;
-      const esgFinalScore = esgScores.get(i)!;
-
       scoredData.push({
         ...row,
-        PE_Score: peFinalScore,
-        ESG_Score: esgFinalScore
+        PE_Score: peScores.get(i)!,
+        ESG_Score: esgScores.get(i)!
       });
     });
   }

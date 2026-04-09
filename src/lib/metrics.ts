@@ -10,70 +10,68 @@ export interface YearlyData {
 }
 
 /**
- * 1. 年化收益率 (Arithmetic Mean)
- * 迎合 Excel 的计算方式，使用简单的算术平均数，保证大屏数据和 Excel 报告一致。
+ * 1. 年化收益率 (Geometric Mean / CAGR)
+ * 公式：∏(1 + r_i)^(1/n) - 1
+ * 逻辑：逐年连乘计算累计财富，再开 n 次方根，减 1。
  */
-export function calculateGeometricMeanReturn(data: YearlyData[], useExcelMath: boolean = false): number {
+export function calculateGeometricMeanReturn(data: YearlyData[]): number {
   if (data.length === 0) return 0;
   const n = data.length;
   
-  if (useExcelMath) {
-    // 算术平均数 Σ(r_i) / n (Excel 逻辑)
-    const sumReturns = data.reduce((acc, curr) => acc + curr.return, 0);
-    return sumReturns / n;
-  } else {
-    // 几何平均数 (严格学术逻辑)
-    const productReturns = data.reduce((acc, curr) => acc * (1 + curr.return), 1);
-    return Math.pow(productReturns, 1 / n) - 1;
-  }
+  // 连乘 ∏(1 + r_i)
+  const cumulativeWealth = data.reduce((acc, curr) => acc * (1 + curr.return), 1);
+  
+  // 开 n 次方根 - 1
+  return Math.pow(cumulativeWealth, 1 / n) - 1;
 }
 
 /**
- * 2. 年化波动率
- * 迎合 Excel 使用总体标准差，严格模式使用样本标准差。
+ * 2. 年化波动率 (Sample Standard Deviation)
+ * 公式：sqrt( Σ(r_i - r_mean)^2 / (n - 1) )
+ * 注意：分母必须是 n-1 (贝塞尔校正)
  */
-export function calculateSampleVolatility(data: YearlyData[], useExcelMath: boolean = false): number {
-  if (data.length === 0) return 0;
+export function calculateSampleVolatility(data: YearlyData[]): number {
+  if (data.length <= 1) return 0; // n-1 不能为 0
   const n = data.length;
 
+  // 首先计算算术平均数 (用于算方差)
   const sumReturns = data.reduce((acc, curr) => acc + curr.return, 0);
   const arithmeticMean = sumReturns / n;
 
+  // 计算离差平方和 Σ(r_i - r_mean)^2
   const sumSquaredDeviations = data.reduce((acc, curr) => {
     return acc + Math.pow(curr.return - arithmeticMean, 2);
   }, 0);
 
-  if (useExcelMath) {
-    // 总体方差 / n (对应 Excel 的 STDEV.P)
-    const populationVariance = sumSquaredDeviations / n;
-    return Math.sqrt(populationVariance);
-  } else {
-    // 样本方差 / (n-1) (严格学术逻辑)
-    if (n <= 1) return 0;
-    const sampleVariance = sumSquaredDeviations / (n - 1);
-    return Math.sqrt(sampleVariance);
-  }
+  // 样本方差 / (n - 1)
+  const sampleVariance = sumSquaredDeviations / (n - 1);
+  
+  return Math.sqrt(sampleVariance);
 }
 
 /**
  * 3. 夏普比率 (Sharpe Ratio)
+ * 公式：(算术平均收益率 - 算术平均无风险利率) / 样本波动率
+ * 必须包含 Rf (默认 2%)
  */
-export function calculateSharpeRatio(data: YearlyData[], defaultRf: number = 0.02, useExcelMath: boolean = false): number {
-  if (data.length === 0) return 0;
+export function calculateSharpeRatio(data: YearlyData[], defaultRf: number = 0.02): number {
+  if (data.length <= 1) return 0;
   const n = data.length;
 
-  // 收益率根据模式选择
-  const meanReturn = calculateGeometricMeanReturn(data, useExcelMath);
+  // 算术平均收益率
+  const sumReturns = data.reduce((acc, curr) => acc + curr.return, 0);
+  const arithmeticMean = sumReturns / n;
 
+  // 算术平均无风险利率
   const sumRf = data.reduce((acc, curr) => acc + (curr.rf_annual !== undefined ? curr.rf_annual : defaultRf), 0);
   const meanRf = sumRf / n;
 
-  // 波动率根据模式选择
-  const volatility = calculateSampleVolatility(data, useExcelMath);
+  // 样本波动率
+  const volatility = calculateSampleVolatility(data);
 
   if (volatility === 0) return 0;
 
-  return (meanReturn - meanRf) / volatility;
+  return (arithmeticMean - meanRf) / volatility;
 }
 
 /**
