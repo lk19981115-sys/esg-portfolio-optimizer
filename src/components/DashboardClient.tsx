@@ -313,28 +313,28 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
         x: calculateSampleVolatility(yearlyData) * 100, 
         y: calculateGeometricMeanReturn(yearlyData) * 100, 
         z: 400,
-        fill: '#60A5FA' // 亮蓝色，提高暗黑模式对比度
+        fill: '#3B82F6'
       },
       { 
         name: t.pure_esg_label, 
         x: calculateSampleVolatility(esgYearly) * 100, 
         y: calculateGeometricMeanReturn(esgYearly) * 100, 
         z: 200,
-        fill: '#34D399' // 亮绿色
+        fill: '#10B981'
       },
       { 
         name: t.pure_value_label, 
         x: calculateSampleVolatility(valueYearly) * 100, 
         y: calculateGeometricMeanReturn(valueYearly) * 100, 
         z: 200,
-        fill: '#F87171' // 亮红色
+        fill: '#EF4444'
       },
       { 
         name: t.benchmark_label, 
         x: calculateSampleVolatility(bmkYearly) * 100, 
         y: calculateGeometricMeanReturn(bmkYearly) * 100, 
         z: 200,
-        fill: '#94A3B8' // 灰色
+        fill: '#94A3B8'
       },
     ];
   }, [yearlyData, esgPerf, valuePerf, dynamicPerf, t]);
@@ -357,9 +357,9 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
 
   if (!hasEntered) {
     return (
-      <div className="fixed inset-0 bg-[#0A0F1C] flex flex-col items-center justify-center overflow-hidden font-sans z-50">
+      <div className="fixed inset-0 bg-slate-50 flex flex-col items-center justify-center overflow-hidden font-sans z-50">
         {/* Subtle background tech grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.05)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
         
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
@@ -368,16 +368,16 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative z-10 flex flex-col items-center max-w-2xl text-center px-6"
         >
-          <div className="w-20 h-20 mb-8 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-900 p-[1px]">
-            <div className="w-full h-full bg-[#0A0F1C] rounded-2xl flex items-center justify-center">
-              <Activity className="w-10 h-10 text-blue-400" />
+          <div className="w-20 h-20 mb-8 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 p-[1px]">
+            <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center">
+              <Activity className="w-10 h-10 text-blue-600" />
             </div>
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 mb-4 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-500 mb-4 tracking-tight">
             Dynamic ESG-Value Portfolio Optimizer
           </h1>
-          <p className="text-slate-400 text-lg md:text-xl mb-12 max-w-xl font-light">
+          <p className="text-slate-500 text-lg md:text-xl mb-12 max-w-xl font-light">
             Quantitative allocation engine powered by cross-sectional factor scoring and value-weighted optimization.
           </p>
 
@@ -386,10 +386,10 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
             disabled={isUnlocking}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="relative group overflow-hidden rounded-full bg-transparent border border-blue-500/30 px-8 py-4 disabled:opacity-80 disabled:cursor-not-allowed"
+            className="relative group overflow-hidden rounded-full bg-white border border-blue-500/30 px-8 py-4 disabled:opacity-80 disabled:cursor-not-allowed shadow-sm"
           >
             {/* Button Hover Glow */}
-            <div className="absolute inset-0 bg-blue-600/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+            <div className="absolute inset-0 bg-blue-50 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
             
             <div className="relative flex items-center gap-3">
               {isUnlocking ? (
@@ -398,21 +398,21 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
                     animate={{ rotate: 360 }}
                     transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
                   >
-                    <Cpu className="w-5 h-5 text-blue-400" />
+                    <Cpu className="w-5 h-5 text-blue-600" />
                   </motion.div>
-                  <span className="text-blue-100 font-medium tracking-wide">Processing Data...</span>
+                  <span className="text-blue-700 font-medium tracking-wide">Processing Data...</span>
                 </>
               ) : (
                 <>
-                  <Database className="w-5 h-5 text-blue-400 group-hover:text-blue-300 transition-colors" />
-                  <span className="text-blue-100 font-medium tracking-wide uppercase text-sm">Initialize Optimizer</span>
+                  <Database className="w-5 h-5 text-blue-600 group-hover:text-blue-700 transition-colors" />
+                  <span className="text-blue-700 font-medium tracking-wide uppercase text-sm">Initialize Optimizer</span>
                 </>
               )}
             </div>
           </motion.button>
 
           {/* Progress Bar (Visible only when unlocking) */}
-          <div className="w-64 h-1 bg-slate-800 rounded-full mt-10 overflow-hidden opacity-0" style={{ opacity: isUnlocking ? 1 : 0, transition: 'opacity 0.3s' }}>
+          <div className="w-64 h-1 bg-slate-200 rounded-full mt-10 overflow-hidden opacity-0" style={{ opacity: isUnlocking ? 1 : 0, transition: 'opacity 0.3s' }}>
             <motion.div 
               className="h-full bg-blue-500"
               initial={{ width: "0%" }}
@@ -426,24 +426,24 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
   }
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-[#0B1120] font-sans text-slate-200">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-slate-50 font-sans text-slate-800">
       {/* Sidebar - 在手机端变成顶部的参数配置区，在电脑端依然是固定的侧边栏 */}
-      <aside className="w-full lg:w-72 lg:h-screen bg-[#111827]/80 backdrop-blur-xl border-b lg:border-b-0 lg:border-r border-slate-800/50 shadow-[4px_0_24px_rgba(0,0,0,0.2)] p-6 lg:p-8 flex flex-col z-10 relative lg:sticky lg:top-0">
+      <aside className="w-full lg:w-72 lg:h-screen bg-white/80 backdrop-blur-xl border-b lg:border-b-0 lg:border-r border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.05)] p-6 lg:p-8 flex flex-col z-10 relative lg:sticky lg:top-0">
         <div className="flex items-center justify-between lg:justify-start gap-2 mb-8 lg:mb-10">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.5)]">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.3)]">
               <Activity className="text-white w-5 h-5" />
             </div>
-            <h1 className="text-base lg:text-lg font-bold text-slate-100 leading-tight">{t.app_title}</h1>
+            <h1 className="text-base lg:text-lg font-bold text-slate-900 leading-tight">{t.app_title}</h1>
           </div>
           
           {/* Language Selector (Mobile Only) */}
-          <div className="lg:hidden flex items-center gap-1 bg-slate-800/80 px-2 py-1 rounded-md border border-slate-700/50">
-            <Globe className="w-3.5 h-3.5 text-slate-400" />
+          <div className="lg:hidden flex items-center gap-1 bg-white px-2 py-1 rounded-md border border-slate-200 shadow-sm">
+            <Globe className="w-3.5 h-3.5 text-slate-500" />
             <select
               value={lang}
               onChange={(e) => setLang(e.target.value as LangKey)}
-              className="bg-transparent text-xs font-medium text-slate-300 outline-none cursor-pointer"
+              className="bg-transparent text-xs font-medium text-slate-700 outline-none cursor-pointer"
             >
               <option value="en">EN</option>
               <option value="zh-CN">简</option>
@@ -457,11 +457,11 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
 
         <div className="mb-4 lg:mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
           <div>
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 lg:mb-6 flex items-center gap-2">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 lg:mb-6 flex items-center gap-2">
               <Settings className="w-4 h-4" /> {t.strategy_settings}
             </h3>
             
-            <label className="block text-sm font-medium text-slate-300 mb-3">
+            <label className="block text-sm font-medium text-slate-600 mb-3">
               {t.esg_weight} ({esgWeight}%)
             </label>
             <input 
@@ -469,30 +469,30 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
               min="0" max="100" step="10" 
               value={esgWeight} 
               onChange={(e) => setEsgWeight(Number(e.target.value))}
-              className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+              className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
             />
           </div>
           
-          <div className="p-3 lg:p-4 bg-slate-800/50 rounded-xl border border-slate-700/50 backdrop-blur-sm">
-            <p className="text-[10px] lg:text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-2 lg:mb-3">{t.current_allocation}</p>
+          <div className="p-3 lg:p-4 bg-slate-100/50 rounded-xl border border-slate-200 backdrop-blur-sm">
+            <p className="text-[10px] lg:text-[11px] font-semibold text-slate-500 uppercase tracking-wide mb-2 lg:mb-3">{t.current_allocation}</p>
             <div className="flex justify-between items-center mb-1.5 lg:mb-2">
-              <span className="text-xs lg:text-sm text-slate-400">🌱 {t.esg}</span>
-              <span className="text-xs lg:text-sm font-bold text-slate-100">{esgWeight}%</span>
+              <span className="text-xs lg:text-sm text-slate-600">🌱 {t.esg}</span>
+              <span className="text-xs lg:text-sm font-bold text-slate-900">{esgWeight}%</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-xs lg:text-sm text-slate-400">💰 {t.value}</span>
-              <span className="text-xs lg:text-sm font-bold text-slate-100">{valueWeight}%</span>
+              <span className="text-xs lg:text-sm text-slate-600">💰 {t.value}</span>
+              <span className="text-xs lg:text-sm font-bold text-slate-900">{valueWeight}%</span>
             </div>
           </div>
 
           <div className="md:col-span-2 lg:col-span-1 mt-0 lg:mt-6">
-            <label className="block text-xs lg:text-sm font-bold text-slate-400 uppercase tracking-wider mb-2 lg:mb-3">
+            <label className="block text-xs lg:text-sm font-bold text-slate-500 uppercase tracking-wider mb-2 lg:mb-3">
               {t.holdings_year}
             </label>
             <select 
               value={selectedYear}
               onChange={(e) => setSelectedYear(Number(e.target.value))}
-              className="w-full p-2 lg:p-3 bg-slate-800/80 border border-slate-700/50 rounded-lg text-sm lg:text-base font-medium text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-sm cursor-pointer backdrop-blur-md"
+              className="w-full p-2 lg:p-3 bg-white border border-slate-300 rounded-lg text-sm lg:text-base font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-sm cursor-pointer backdrop-blur-md"
             >
               {years.map(y => <option key={y} value={y}>{t.year_prefix}{y}{t.year_suffix}</option>)}
             </select>
@@ -506,8 +506,8 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-6 lg:p-10 lg:h-screen lg:overflow-y-auto relative">
         {/* Subtle background glow */}
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-600/10 blur-[120px] pointer-events-none" />
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-500/10 blur-[120px] pointer-events-none" />
 
         <motion.div
           variants={containerVariants}
@@ -517,17 +517,17 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
         >
           <motion.header variants={itemVariants} className="mb-6 lg:mb-10 flex justify-between items-start">
             <div>
-              <h2 className="text-xl lg:text-2xl font-bold text-slate-100">{t.overview_title}</h2>
-              <p className="text-xs lg:text-sm text-slate-400 mt-1">{t.overview_subtitle}</p>
+              <h2 className="text-xl lg:text-2xl font-bold text-slate-900">{t.overview_title}</h2>
+              <p className="text-xs lg:text-sm text-slate-500 mt-1">{t.overview_subtitle}</p>
             </div>
             
             {/* Language Selector (Desktop Only) */}
-            <div className="hidden lg:flex items-center gap-2 bg-slate-800/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-700/50 shadow-sm">
-              <Globe className="w-4 h-4 text-slate-400" />
+            <div className="hidden lg:flex items-center gap-2 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+              <Globe className="w-4 h-4 text-slate-500" />
               <select
                 value={lang}
                 onChange={(e) => setLang(e.target.value as LangKey)}
-                className="bg-transparent text-sm font-medium text-slate-300 outline-none cursor-pointer"
+                className="bg-transparent text-sm font-medium text-slate-700 outline-none cursor-pointer"
               >
                 <option value="en">English</option>
                 <option value="zh-CN">简体中文</option>
@@ -551,19 +551,19 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
           {/* Chart Section */}
           <motion.div 
             variants={itemVariants}
-            className="bg-[#111827]/80 backdrop-blur-xl p-4 lg:p-6 rounded-2xl border border-slate-800/50 shadow-sm mb-6 lg:mb-10"
+            className="bg-white/80 backdrop-blur-xl p-4 lg:p-6 rounded-2xl border border-slate-200 shadow-sm mb-6 lg:mb-10"
           >
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
               <div className="flex items-center gap-2 lg:gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
                 <button 
                   onClick={() => setActiveChartTab('cumulative')}
-                  className={`flex items-center gap-2 text-xs lg:text-sm font-bold px-3 lg:px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${activeChartTab === 'cumulative' ? 'bg-blue-600/20 text-blue-400' : 'text-slate-400 hover:bg-slate-800'}`}
+                  className={`flex items-center gap-2 text-xs lg:text-sm font-bold px-3 lg:px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${activeChartTab === 'cumulative' ? 'bg-blue-50 text-blue-600' : 'text-slate-500 hover:bg-slate-100'}`}
                 >
                   <BarChart3 className="w-4 h-4" /> {t.chart_tab_cumulative}
                 </button>
                 <button 
                   onClick={() => setActiveChartTab('scatter')}
-                  className={`flex items-center gap-2 text-xs lg:text-sm font-bold px-3 lg:px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${activeChartTab === 'scatter' ? 'bg-blue-600/20 text-blue-400' : 'text-slate-400 hover:bg-slate-800'}`}
+                  className={`flex items-center gap-2 text-xs lg:text-sm font-bold px-3 lg:px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${activeChartTab === 'scatter' ? 'bg-blue-50 text-blue-600' : 'text-slate-500 hover:bg-slate-100'}`}
                 >
                   <ScatterChartIcon className="w-4 h-4" /> {t.chart_tab_scatter}
                 </button>
@@ -574,9 +574,9 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
                     type="checkbox" 
                     checked={showBenchmark} 
                     onChange={(e) => setShowBenchmark(e.target.checked)}
-                    className="w-4 h-4 bg-slate-800 border-slate-600 rounded text-blue-500 focus:ring-blue-500 focus:ring-offset-slate-900"
+                    className="w-4 h-4 bg-white border-slate-300 rounded text-blue-600 focus:ring-blue-500 focus:ring-offset-white"
                   />
-                  <span className="text-xs lg:text-sm font-medium text-slate-400">{t.show_benchmark}</span>
+                  <span className="text-xs lg:text-sm font-medium text-slate-600">{t.show_benchmark}</span>
                 </label>
               )}
             </div>
@@ -584,28 +584,28 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
               {activeChartTab === 'cumulative' ? (
                 <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1E293B" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
                   <XAxis dataKey="Year" tick={{fontSize: 12, fill: '#64748B'}} tickLine={false} axisLine={false} />
                   <YAxis tickFormatter={(val) => `${(val * 100).toFixed(0)}%`} tick={{fontSize: 12, fill: '#64748B'}} tickLine={false} axisLine={false} />
                   <Tooltip 
                     formatter={(value: any) => [`${(Number(value) * 100).toFixed(2)}%`, '']}
-                    contentStyle={{ borderRadius: '8px', border: '1px solid #1E293B', backgroundColor: '#0F172A', color: '#F1F5F9', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
+                    contentStyle={{ borderRadius: '8px', border: '1px solid #E2E8F0', backgroundColor: '#FFFFFF', color: '#0F172A', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
                   />
-                  <Legend iconType="circle" wrapperStyle={{ fontSize: '15px', fontWeight: '500', paddingTop: '15px', color: '#CBD5E1' }} />
+                  <Legend iconType="circle" wrapperStyle={{ fontSize: '15px', fontWeight: '500', paddingTop: '15px', color: '#475569' }} />
                   
                   {/* 极致视觉对比：粗的主线，极细的虚线。更新了更亮、对比度更高的颜色 */}
-                  <Line type="monotone" dataKey="Dynamic" name={`${t.dynamic_label} (${esgWeight}% ESG)`} stroke="#60A5FA" strokeWidth={4} dot={false} animationDuration={800} />
+                  <Line type="monotone" dataKey="Dynamic" name={`${t.dynamic_label} (${esgWeight}% ESG)`} stroke="#3B82F6" strokeWidth={4} dot={false} animationDuration={800} />
                   {showBenchmark && (
                     <Line type="monotone" dataKey="Benchmark" name={t.benchmark_label} stroke="#94A3B8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
                   )}
-                  <Line type="monotone" dataKey="PureESG" name={t.pure_esg_label} stroke="#34D399" strokeWidth={2} strokeDasharray="4 4" dot={false} />
-                  <Line type="monotone" dataKey="PureValue" name={t.pure_value_label} stroke="#F87171" strokeWidth={2} strokeDasharray="2 2" dot={false} />
+                  <Line type="monotone" dataKey="PureESG" name={t.pure_esg_label} stroke="#10B981" strokeWidth={2} strokeDasharray="4 4" dot={false} />
+                  <Line type="monotone" dataKey="PureValue" name={t.pure_value_label} stroke="#EF4444" strokeWidth={2} strokeDasharray="2 2" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                   <XAxis 
                     type="number" 
                     dataKey="x" 
@@ -628,14 +628,14 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
                   />
                   <ZAxis type="number" dataKey="z" range={[100, 600]} name="Weight" />
                   <Tooltip 
-                    cursor={{ strokeDasharray: '3 3', stroke: '#334155' }}
-                    contentStyle={{ borderRadius: '8px', border: '1px solid #1E293B', backgroundColor: '#0F172A', color: '#F1F5F9', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
+                    cursor={{ strokeDasharray: '3 3', stroke: '#CBD5E1' }}
+                    contentStyle={{ borderRadius: '8px', border: '1px solid #E2E8F0', backgroundColor: '#FFFFFF', color: '#0F172A', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
                     formatter={(value: any, name: any) => {
                       if (name === 'Weight') return null;
                       return [`${Number(value).toFixed(2)}%`, name];
                     }}
                   />
-                  <Legend iconType="circle" wrapperStyle={{ fontSize: '15px', fontWeight: '500', paddingTop: '15px', color: '#CBD5E1' }} />
+                  <Legend iconType="circle" wrapperStyle={{ fontSize: '15px', fontWeight: '500', paddingTop: '15px', color: '#475569' }} />
                   {scatterData.map((entry, index) => (
                     <Scatter 
                       key={`scatter-${index}`} 
@@ -654,25 +654,25 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
         {/* Table Section */}
         <motion.div 
           variants={itemVariants}
-          className="bg-[#111827]/80 backdrop-blur-xl rounded-2xl border border-slate-800/50 shadow-sm overflow-hidden"
+          className="bg-white/80 backdrop-blur-xl rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
         >
-          <div className="p-4 lg:p-6 border-b border-slate-800/50">
-            <h3 className="text-base lg:text-lg font-bold text-slate-100 flex items-center gap-2">
-              <Target className="w-5 h-5 lg:w-6 lg:h-6 text-blue-500" /> {t.top_holdings.replace('{year}', selectedYear.toString())}
+          <div className="p-4 lg:p-6 border-b border-slate-200">
+            <h3 className="text-base lg:text-lg font-bold text-slate-900 flex items-center gap-2">
+              <Target className="w-5 h-5 lg:w-6 lg:h-6 text-blue-600" /> {t.top_holdings.replace('{year}', selectedYear.toString())}
             </h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
-                <tr className="bg-slate-800/30">
+                <tr className="bg-slate-50">
                   {[t.col_ticker, t.col_name, t.col_pe, t.col_esg, t.col_score, t.col_mktcap, t.col_weight].map((h, i) => (
-                    <th key={h} className={`py-3 lg:py-4 px-4 lg:px-6 text-[11px] lg:text-[13px] font-bold text-slate-400 uppercase tracking-wider ${i > 1 ? 'text-right' : ''}`}>
+                    <th key={h} className={`py-3 lg:py-4 px-4 lg:px-6 text-[11px] lg:text-[13px] font-bold text-slate-500 uppercase tracking-wider ${i > 1 ? 'text-right' : ''}`}>
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/50">
+              <tbody className="divide-y divide-slate-100">
                 {displayHoldings.map((row) => {
                   // 计算各指标的相对位置以优化热力图长度
                   // PE: 越小越好。通常PE在0-100之间，用更灵敏的缩放
@@ -688,33 +688,33 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
                   const weightPercent = Math.min(100, row.Weight * 400);
 
                   return (
-                  <tr key={row.Ticker} className="hover:bg-slate-800/50 transition-colors">
-                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base font-semibold text-slate-100">{row.Ticker}</td>
-                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base text-slate-300 max-w-[150px] truncate">{row['firm name']}</td>
+                  <tr key={row.Ticker} className="hover:bg-slate-50 transition-colors">
+                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base font-semibold text-slate-900">{row.Ticker}</td>
+                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base text-slate-600 max-w-[150px] truncate">{row['firm name']}</td>
                     
                     {/* PE Heatmap */}
-                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base text-slate-300 text-right font-mono relative">
-                      <div className="absolute inset-y-1.5 lg:inset-y-2 right-4 lg:right-6 bg-emerald-500/20 rounded-md" style={{ width: `${pePercent}%`, zIndex: 0 }}></div>
+                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base text-slate-700 text-right font-mono relative">
+                      <div className="absolute inset-y-1.5 lg:inset-y-2 right-4 lg:right-6 bg-emerald-100 rounded-md" style={{ width: `${pePercent}%`, zIndex: 0 }}></div>
                       <span className="relative z-10">{row.pe.toFixed(2)}</span>
                     </td>
                     
                     {/* ESG Heatmap */}
-                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base text-slate-300 text-right font-mono relative">
-                      <div className="absolute inset-y-1.5 lg:inset-y-2 right-4 lg:right-6 bg-emerald-500/20 rounded-md" style={{ width: `${esgPercent}%`, zIndex: 0 }}></div>
+                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base text-slate-700 text-right font-mono relative">
+                      <div className="absolute inset-y-1.5 lg:inset-y-2 right-4 lg:right-6 bg-emerald-100 rounded-md" style={{ width: `${esgPercent}%`, zIndex: 0 }}></div>
                       <span className="relative z-10">{row.adj_esg.toFixed(2)}</span>
                     </td>
                     
                     {/* Combined Score Heatmap */}
-                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base text-slate-300 text-right font-mono relative">
-                      <div className="absolute inset-y-1.5 lg:inset-y-2 right-4 lg:right-6 bg-blue-500/20 rounded-md" style={{ width: `${scorePercent}%`, zIndex: 0 }}></div>
+                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base text-slate-700 text-right font-mono relative">
+                      <div className="absolute inset-y-1.5 lg:inset-y-2 right-4 lg:right-6 bg-blue-100 rounded-md" style={{ width: `${scorePercent}%`, zIndex: 0 }}></div>
                       <span className="relative z-10">{row.Combined_Score.toFixed(2)}</span>
                     </td>
                     
-                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base text-slate-300 text-right font-mono">{(row.mktcap / 1000).toFixed(1)}</td>
+                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base text-slate-600 text-right font-mono">{(row.mktcap / 1000).toFixed(1)}</td>
                     
                     {/* Weight Data Bar */}
-                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base font-bold text-slate-100 text-right font-mono relative">
-                      <div className="absolute inset-y-1.5 lg:inset-y-2 right-4 lg:right-6 bg-indigo-500/30 rounded-md" style={{ width: `${weightPercent}%`, minWidth: '4px', zIndex: 0 }}></div>
+                    <td className="py-3 lg:py-4 px-4 lg:px-6 text-sm lg:text-base font-bold text-slate-900 text-right font-mono relative">
+                      <div className="absolute inset-y-1.5 lg:inset-y-2 right-4 lg:right-6 bg-indigo-100 rounded-md" style={{ width: `${weightPercent}%`, minWidth: '4px', zIndex: 0 }}></div>
                       <span className="relative z-10">{(row.Weight * 100).toFixed(2)}%</span>
                     </td>
                   </tr>
@@ -747,17 +747,17 @@ function MetricCard({ title, value, isPercent = false, isHighlight = false, isNe
 
   return (
     <motion.div 
-      whileHover={{ y: -4, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.2)' }}
+      whileHover={{ y: -4, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}
       className={`p-6 rounded-2xl border transition-all duration-300 flex-1 relative overflow-hidden ${
         isHighlight 
-          ? 'bg-[#1E293B]/80 backdrop-blur-md border-blue-500/30 border-l-4 border-l-blue-500' 
-          : 'bg-[#111827]/60 backdrop-blur-md border-slate-800/50'
+          ? 'bg-blue-50 backdrop-blur-md border-blue-200 border-l-4 border-l-blue-500' 
+          : 'bg-white backdrop-blur-md border-slate-200'
       }`}
     >
-      <h4 className={`text-xs font-bold uppercase tracking-wider mb-2 relative z-10 ${isHighlight ? 'text-blue-400' : 'text-slate-400'}`}>
+      <h4 className={`text-xs font-bold uppercase tracking-wider mb-2 relative z-10 ${isHighlight ? 'text-blue-600' : 'text-slate-500'}`}>
         {title}
       </h4>
-      <motion.div className={`text-3xl font-extrabold relative z-10 ${isHighlight ? 'text-blue-100' : 'text-slate-100'}`}>
+      <motion.div className={`text-3xl font-extrabold relative z-10 ${isHighlight ? 'text-blue-900' : 'text-slate-900'}`}>
         {displayValue}
       </motion.div>
       
@@ -769,7 +769,7 @@ function MetricCard({ title, value, isPercent = false, isHighlight = false, isNe
               <Line 
                 type="monotone" 
                 dataKey="value" 
-                stroke={isHighlight ? '#3B82F6' : '#64748B'} 
+                stroke={isHighlight ? '#3B82F6' : '#94A3B8'} 
                 strokeWidth={2} 
                 dot={false} 
                 isAnimationActive={true}
