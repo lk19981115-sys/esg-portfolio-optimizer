@@ -297,10 +297,7 @@ export default function DashboardClient({ baseData }: { baseData: ScoredData[] }
     sampleVolatility = 0.1037; // Volatility: 10.37%
     sharpe = 1.60; // Sharpe Ratio: 1.60
     
-    // 把 Average Alpha 卡片替换为 t-stat 以完美匹配 PPT
-    avgAlpha = 5.06; // t-stat: 5.06
-    alphaTitle = "t-stat"; // 将卡片标题改为 t-stat
-    alphaIsPercent = false; // t-stat 不是百分比
+    // Average Alpha 保持不动，不替换为 t-stat
   }
   // ----------------------------------------------------
 
